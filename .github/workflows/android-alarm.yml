@@ -38,11 +38,7 @@ jobs:
           arch: x86_64
           profile: pixel_2
           script: |
-            cd apps/PawPawPenguinsAlarm
-            gradle installDebug
-            adb shell appops set com.pawpawpenguins.alarmclock SCHEDULE_EXACT_ALARM allow
-            adb shell pm grant com.pawpawpenguins.alarmclock android.permission.POST_NOTIFICATIONS || true
-            bash -o pipefail -c 'gradle connectedDebugAndroidTest --stacktrace 2>&1 | tee -a build-test.log'
+            bash -eo pipefail -c 'cd apps/PawPawPenguinsAlarm && gradle installDebug && adb shell appops set com.pawpawpenguins.alarmclock SCHEDULE_EXACT_ALARM allow && (adb shell pm grant com.pawpawpenguins.alarmclock android.permission.POST_NOTIFICATIONS || true) && (gradle connectedDebugAndroidTest --stacktrace 2>&1 | tee -a build-test.log)'
       - name: Save test logs, reports, and APK
         if: always()
         uses: actions/upload-artifact@v4
