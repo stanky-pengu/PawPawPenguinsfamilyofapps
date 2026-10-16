@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.pawpawpenguins.golfbuddy">
-    <application android:allowBackup="false" android:icon="@drawable/ic_golf_buddy"
+    <application android:allowBackup="false" android:icon="@drawable/ic_golf_buddy_mascot"
         android:label="PawPawPenguins Golf Buddy" android:supportsRtl="true" android:theme="@style/AppTheme">
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>

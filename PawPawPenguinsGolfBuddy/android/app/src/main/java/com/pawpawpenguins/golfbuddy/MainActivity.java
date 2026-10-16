@@ -4,11 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Insets;
-import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -18,6 +15,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -83,9 +81,11 @@ public class MainActivity extends Activity {
         hero.setGravity(Gravity.CENTER_VERTICAL);
         hero.setPadding(dp(16),dp(12),dp(16),dp(14));
         hero.setBackground(box(GREEN,24));
-        Penguin penguin=new Penguin();
-        penguin.setContentDescription("Penguin mascot holding a golf club");
-        hero.addView(penguin,new LinearLayout.LayoutParams(dp(70),dp(82)));
+        ImageView mascot=new ImageView(this);
+        mascot.setImageResource(R.drawable.ic_golf_buddy_mascot);
+        mascot.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        mascot.setContentDescription("PawPawPenguins penguin mascot holding a golf club");
+        hero.addView(mascot,new LinearLayout.LayoutParams(dp(92),dp(92)));
         LinearLayout heroText=new LinearLayout(this);
         heroText.setOrientation(LinearLayout.VERTICAL);
         heroText.setPadding(dp(12),0,0,0);
@@ -330,22 +330,6 @@ public class MainActivity extends Activity {
     private Button navButton(String value){Button b=new Button(this);b.setText(value);b.setTextSize(22);b.setTextColor(GREEN);b.setMinWidth(dp(48));b.setMinHeight(dp(48));b.setPadding(0,0,0,0);b.setBackground(box(Color.rgb(242,246,240),15));return b;}
     private GradientDrawable box(int color,int radius){GradientDrawable d=new GradientDrawable();d.setColor(color);d.setCornerRadius(dp(radius));return d;}
     private int dp(float n){return (int)(n*getResources().getDisplayMetrics().density+.5f);}
-
-    private final class Penguin extends View {
-        private final Paint p=new Paint(Paint.ANTI_ALIAS_FLAG);
-        Penguin(){super(MainActivity.this);}
-        @Override protected void onDraw(Canvas c){
-            super.onDraw(c);float sx=getWidth()/100f,sy=getHeight()/112f;c.save();c.scale(sx,sy);
-            p.setColor(Color.rgb(12,48,39));p.setAlpha(65);c.drawOval(16,101,84,110,p);p.setAlpha(255);
-            p.setColor(Color.rgb(18,45,49));c.drawRoundRect(17,8,84,100,34,34,p);
-            p.setColor(Color.rgb(255,253,246));c.drawOval(27,27,74,88,p);
-            p.setColor(Color.rgb(18,45,49));c.drawCircle(40,39,3.2f,p);c.drawCircle(60,39,3.2f,p);
-            p.setColor(Color.rgb(240,185,64));Path beak=new Path();beak.moveTo(44,48);beak.lineTo(56,48);beak.lineTo(50,56);beak.close();c.drawPath(beak,p);
-            p.setColor(Color.rgb(243,187,70));p.setStrokeWidth(7);p.setStrokeCap(Paint.Cap.ROUND);c.drawLine(36,91,29,98,p);c.drawLine(64,91,71,98,p);
-            p.setColor(Color.rgb(221,233,225));p.setStrokeWidth(3);c.drawLine(78,23,40,82,p);p.setStrokeWidth(4);c.drawLine(39,81,47,87,p);
-            p.setColor(Color.rgb(18,45,49));p.setStrokeWidth(10);c.drawLine(20,54,12,74,p);c.drawLine(80,54,88,74,p);c.restore();
-        }
-    }
 
     private static final class Round {
         String course="";int current=0;int[] pars,scores;
