@@ -26,7 +26,7 @@ jobs:
           packages: 'platforms;android-36 build-tools;36.0.0'
       - uses: gradle/actions/setup-gradle@v6
         with:
-          gradle-version: '8.13'
+          gradle-version: '9.6.0'
       - name: Build debug APK
         run: gradle -p PawPawPenguinsGolfBuddy/android --no-daemon assembleDebug --stacktrace
       - name: Prepare downloadable APK
