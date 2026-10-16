@@ -1,18 +1,28 @@
 # PawPawPenguins Golf Buddy
 
-A mobile-friendly, offline-first golf scorecard prototype. Open `index.html` in a modern browser. Round data stays in that browser on that device; no account or network connection is used.
+Native Android golf scorecard app, version 0.2.0. The android/ folder is an Android Studio/Gradle project. The earlier index.html prototype remains as a lightweight preview.
 
-## Current features
+## App features
 
-- 9-hole and 18-hole scorecards
-- Hole-by-hole par adjustment (3–6) and stroke entry
-- Live total strokes and score relative to par
-- Save and reopen rounds on the same device
-- Share a text scorecard through the device share sheet, or copy it where clipboard access is available
-- Custom inline cartoon penguin mascot
+- 9-hole or 18-hole scorecards
+- Hole-by-hole scores and editable par values from 3 to 6
+- Running stroke total, course par, and score relative to par
+- Saved rounds stored locally on the phone
+- Share scorecard text with Android's share sheet
+- Custom penguin and golf-club artwork in the app and launcher icon
+- Offline operation; no account, network calls, location, or other runtime permissions
 
-## Current limitations
+## Open and build
 
-This is an HTML app prototype, not a signed Android APK. It does not provide GPS yardages, course databases, cloud sync, or multi-player scoring. Browser storage can be cleared by the user or the browser. Save a round before starting a new one if it should be retained.
+Open the android/ directory in Android Studio, let it sync the Gradle project, then build the debug variant. From a machine with Android SDK Platform 36 and Gradle network access, run:
 
-Version: 0.1.1
+    ./gradlew assembleDebug
+
+The debug APK is for testing. It is signed with a debug key and cannot be published to Google Play. A release must use a user-controlled upload key, a release build, store listing assets, privacy disclosures, and device testing.
+
+The current downloadable test APK is PawPawPenguinsGolfBuddy-0.2.0-debug.apk. It was built from the native source with Android SDK Platform 36 and Build Tools 36.0.0, signed with a temporary debug key, and signature-verified.
+
+Package: com.pawpawpenguins.golfbuddy
+Minimum Android version: Android 8.0 (API 26)
+Target Android version: API 36
+
