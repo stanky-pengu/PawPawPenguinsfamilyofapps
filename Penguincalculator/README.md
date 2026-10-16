@@ -1,6 +1,6 @@
 # PawPawPenguins Penguin Calculator
 
-Version 1.1.0 is a rebranded rebuild of the earlier Big Calculator.
+Version 1.1.1 is a rebranded rebuild of the earlier Big Calculator.
 
 ## Preserved behavior
 
