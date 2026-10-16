@@ -5,7 +5,7 @@ A mobile-friendly, offline-first golf scorecard prototype. Open `index.html` in 
 ## Current features
 
 - 9-hole and 18-hole scorecards
-- Hole-by-hole par and stroke entry
+- Hole-by-hole par adjustment (3–6) and stroke entry
 - Live total strokes and score relative to par
 - Save and reopen rounds on the same device
 - Share a text scorecard through the device share sheet, or copy it where clipboard access is available
@@ -15,4 +15,4 @@ A mobile-friendly, offline-first golf scorecard prototype. Open `index.html` in 
 
 This is an HTML app prototype, not a signed Android APK. It does not provide GPS yardages, course databases, cloud sync, or multi-player scoring. Browser storage can be cleared by the user or the browser. Save a round before starting a new one if it should be retained.
 
-Version: 0.1.0
+Version: 0.1.1
