@@ -19,6 +19,7 @@ The launcher icon now shows the penguin mascot holding a phone. The automatic du
 
 - Host-side duplicate policy tests: **PASS** in GitHub Actions run 39039288638.
 - Android source checks: **PASS** in GitHub Actions run 39039288638.
-- Debug APK assembly: **PENDING CI**.
+- Debug APK assembly: **PASS** in GitHub Actions run 39041336536; APK SHA-256: `607cb272a39421cc5a4bbb68f5d5fef05ef6a1fdef45adca5e870e35a5cae0b5`.
+- CI artifact ZIP SHA-256: `f21fd90dc3afdbe8adb25eed17b06165649eeeefda6457a8ecb535b122d10ece`.
 - Physical-device scan/delete and appearance checks: **not performed** in this build environment.
 - Play Store release signing: **not configured**; this project produces a debug APK.
