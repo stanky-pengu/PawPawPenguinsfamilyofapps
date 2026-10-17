@@ -37,40 +37,49 @@ final class DuplicateScanner {
 
     private DuplicateScanner() {}
 
-    static List<FileItem> scanScreenshots(Context context) throws Exception {
-        ContentResolver resolver = context.getContentResolver();
-        Uri collection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        String pathColumnName = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
-                ? MediaStore.Images.Media.RELATIVE_PATH : MediaStore.Images.Media.DATA;
-        String[] projection = {
-                MediaStore.Images.Media._ID,
-                MediaStore.Images.Media.DISPLAY_NAME,
-                MediaStore.Images.Media.SIZE,
-                MediaStore.Images.Media.DATE_ADDED,
-                pathColumnName
-        };
+    static List<FileItem> scanDevice(Context context, Uri downloadsTree) throws Exception {
         Map<Long, List<FileItem>> sameSize = new HashMap<>();
-        try (Cursor cursor = resolver.query(collection, projection, null, null,
-                MediaStore.Images.Media.DATE_ADDED + " ASC")) {
-            if (cursor == null) return new ArrayList<>();
-            int idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
-            int nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME);
-            int sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE);
-            int dateColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED);
-            int pathColumn = cursor.getColumnIndex(pathColumnName);
+        addMedia(context, MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME,
+                MediaStore.Images.Media.SIZE, MediaStore.Images.Media.DATE_ADDED,
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ? MediaStore.Images.Media.RELATIVE_PATH : MediaStore.Images.Media.DATA,
+                sameSize);
+        addMedia(context, MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                MediaStore.Video.Media._ID, MediaStore.Video.Media.DISPLAY_NAME,
+                MediaStore.Video.Media.SIZE, MediaStore.Video.Media.DATE_ADDED,
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ? MediaStore.Video.Media.RELATIVE_PATH : MediaStore.Video.Media.DATA,
+                sameSize);
+        if (downloadsTree != null) addFolder(context, downloadsTree, sameSize);
+        return findRedundant(context, sameSize);
+    }
+
+    private static void addMedia(Context context, Uri collection, String idKey, String nameKey,
+                                 String sizeKey, String dateKey, String pathKey,
+                                 Map<Long, List<FileItem>> sameSize) {
+        ContentResolver resolver = context.getContentResolver();
+        String[] projection = {idKey, nameKey, sizeKey, dateKey, pathKey};
+        try (Cursor cursor = resolver.query(collection, projection, null, null, dateKey + " ASC")) {
+            if (cursor == null) return;
+            int idColumn = cursor.getColumnIndex(idKey);
+            int nameColumn = cursor.getColumnIndex(nameKey);
+            int sizeColumn = cursor.getColumnIndex(sizeKey);
+            int dateColumn = cursor.getColumnIndex(dateKey);
+            int pathColumn = cursor.getColumnIndex(pathKey);
             while (cursor.moveToNext()) {
-                String name = cursor.getString(nameColumn);
-                String path = pathColumn >= 0 ? cursor.getString(pathColumn) : "";
-                if (!isScreenshot(name, path)) continue;
                 long size = cursor.getLong(sizeColumn);
                 if (size <= 0) continue;
                 long id = cursor.getLong(idColumn);
+                String name = cursor.getString(nameColumn);
+                String path = pathColumn >= 0 ? cursor.getString(pathColumn) : "";
                 Uri itemUri = Uri.withAppendedPath(collection, Long.toString(id));
-                FileItem item = new FileItem(itemUri, name, path, size, cursor.getLong(dateColumn), true);
+                FileItem item = new FileItem(itemUri, name == null ? "Media file" : name,
+                        path == null || path.isEmpty() ? "Photos and videos" : path,
+                        size, cursor.getLong(dateColumn), true);
                 sameSize.computeIfAbsent(size, ignored -> new ArrayList<>()).add(item);
             }
+        } catch (SecurityException ignored) {
+            // Android may grant only one media type or a selected-photo subset.
         }
-        return findRedundant(context, sameSize);
     }
 
     /** Scans direct files only; subfolders are deliberately left untouched. */
@@ -78,6 +87,13 @@ final class DuplicateScanner {
         DocumentFile tree = DocumentFile.fromTreeUri(context, treeUri);
         Map<Long, List<FileItem>> sameSize = new HashMap<>();
         if (tree == null || !tree.isDirectory()) return new ArrayList<>();
+        addFolder(context, treeUri, sameSize);
+        return findRedundant(context, sameSize);
+    }
+
+    private static void addFolder(Context context, Uri treeUri, Map<Long, List<FileItem>> sameSize) {
+        DocumentFile tree = DocumentFile.fromTreeUri(context, treeUri);
+        if (tree == null || !tree.isDirectory()) return;
         for (DocumentFile file : tree.listFiles()) {
             if (!file.isFile() || file.length() <= 0) continue;
             long dateAdded = file.lastModified() / 1000L;
@@ -85,13 +101,6 @@ final class DuplicateScanner {
                     "Selected Downloads folder", file.length(), dateAdded, false);
             sameSize.computeIfAbsent(item.size, ignored -> new ArrayList<>()).add(item);
         }
-        return findRedundant(context, sameSize);
-    }
-
-    private static boolean isScreenshot(String name, String path) {
-        String lowerName = name == null ? "" : name.toLowerCase(Locale.ROOT);
-        String lowerPath = path == null ? "" : path.toLowerCase(Locale.ROOT);
-        return lowerPath.contains("screenshot") || lowerName.contains("screenshot");
     }
 
     private static List<FileItem> findRedundant(Context context, Map<Long, List<FileItem>> sizeGroups) throws Exception {

@@ -1,6 +1,6 @@
 PawPawPenguins Phone Cleaner — Privacy Summary
 
-The app scans screenshot images you allow it to access and, if you select the Download folder, files directly inside that folder. It compares exact file contents on your device using SHA-256. File names and scan results stay on your device. The app has no Internet permission and does not send files, hashes, or personal data anywhere.
+The app automatically scans photos and videos Android allows it to access and, if you selected the Download folder, files directly inside that folder. It compares exact file contents on your device using SHA-256. File names and scan results stay on your device. The app has no Internet permission and does not send files, hashes, or personal data anywhere. Deletion only occurs after you choose the delete action and approve any Android confirmation.
 
 Screenshot deletion uses Android's system confirmation on Android 11 and newer. Download-folder duplicate deletion occurs only after you press the delete button, and only for exact duplicate copies found in the folder you selected. The oldest identical copy is retained. Selected Downloads subfolders are not scanned. Deleted files may not be recoverable; check the listed copies before confirming.
 

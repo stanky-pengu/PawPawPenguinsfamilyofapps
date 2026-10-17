@@ -42,13 +42,12 @@ public final class MainActivity extends Activity {
     private TextView status;
     private Button deleteButton;
     private List<DuplicateScanner.FileItem> currentDuplicates = new ArrayList<>();
-    private boolean currentIsScreenshots;
-    private Uri pendingFolderUri;
+    private boolean currentScanIsDevice;
 
     @Override protected void onCreate(Bundle state) {
         super.onCreate(state);
         buildScreen();
-        showWelcome();
+        startAutomaticScan();
     }
 
     private void buildScreen() {
@@ -95,11 +94,11 @@ public final class MainActivity extends Activity {
 
         LinearLayout buttons = new LinearLayout(this);
         buttons.setOrientation(LinearLayout.VERTICAL);
-        Button screenshots = makeButton("Find duplicate screenshots");
-        screenshots.setOnClickListener(v -> requestScreenshotScan());
+        Button screenshots = makeButton("Scan phone for duplicates");
+        screenshots.setOnClickListener(v -> startAutomaticScan());
         Button downloads = makeButton("Choose Downloads folder");
         downloads.setOnClickListener(v -> chooseDownloadsFolder());
-        Button scanDownloads = makeButton("Scan Downloads duplicates");
+        Button scanDownloads = makeButton("Scan Downloads folder only");
         scanDownloads.setOnClickListener(v -> scanDownloads());
         buttons.addView(screenshots, rowParams());
         buttons.addView(downloads, rowParams());
@@ -108,7 +107,7 @@ public final class MainActivity extends Activity {
         buttonsParams.topMargin = dp(16);
         page.addView(buttons, buttonsParams);
 
-        status = text("Choose a scan to get started.", 15, Color.rgb(55, 82, 99), false);
+        status = text("Getting ready to check for duplicates…", 15, Color.rgb(55, 82, 99), false);
         status.setPadding(dp(14), dp(14), dp(14), dp(14));
         status.setBackground(cardBackground());
         LinearLayout.LayoutParams statusParams = new LinearLayout.LayoutParams(-1, -2);
@@ -130,39 +129,38 @@ public final class MainActivity extends Activity {
         LinearLayout.LayoutParams deleteParams = rowParams();
         deleteParams.topMargin = dp(10);
         page.addView(deleteButton, deleteParams);
-        TextView footer = text("Exact matches only. One oldest copy is kept. Android confirms screenshot deletion.",
+        TextView footer = text("Exact matches only. One oldest copy is kept. You review and approve every deletion.",
                 12, Color.rgb(91, 117, 133), false);
         footer.setPadding(dp(6), dp(12), dp(6), 0);
         page.addView(footer);
         setContentView(scroll);
     }
 
-    private void showWelcome() {
-        Uri saved = savedDownloadsUri();
-        if (saved != null) status.setText("Downloads folder remembered. Scan it whenever you’re ready.");
-    }
-
-    private void requestScreenshotScan() {
-        if (!hasImagePermission()) {
+    private void startAutomaticScan() {
+        if (!hasAnyMediaPermission()) {
             if (Build.VERSION.SDK_INT >= 34) {
                 requestPermissions(new String[]{Manifest.permission.READ_MEDIA_IMAGES,
+                        Manifest.permission.READ_MEDIA_VIDEO,
                         Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED}, REQUEST_MEDIA_PERMISSION);
             } else if (Build.VERSION.SDK_INT >= 33) {
-                requestPermissions(new String[]{Manifest.permission.READ_MEDIA_IMAGES}, REQUEST_MEDIA_PERMISSION);
+                requestPermissions(new String[]{Manifest.permission.READ_MEDIA_IMAGES,
+                        Manifest.permission.READ_MEDIA_VIDEO}, REQUEST_MEDIA_PERMISSION);
             } else {
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_MEDIA_PERMISSION);
             }
             return;
         }
-        runScan(true, null);
+        runDeviceScan();
     }
 
-    private boolean hasImagePermission() {
+    private boolean hasAnyMediaPermission() {
         if (Build.VERSION.SDK_INT >= 34) {
             return checkSelfPermission(Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED
+                    || checkSelfPermission(Manifest.permission.READ_MEDIA_VIDEO) == PackageManager.PERMISSION_GRANTED
                     || checkSelfPermission(Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED) == PackageManager.PERMISSION_GRANTED;
         }
-        if (Build.VERSION.SDK_INT >= 33) return checkSelfPermission(Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED;
+        if (Build.VERSION.SDK_INT >= 33) return checkSelfPermission(Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED
+                || checkSelfPermission(Manifest.permission.READ_MEDIA_VIDEO) == PackageManager.PERMISSION_GRANTED;
         return checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
@@ -187,35 +185,50 @@ public final class MainActivity extends Activity {
         runScan(false, tree);
     }
 
-    private void runScan(boolean screenshots, Uri folder) {
+    private void runDeviceScan() {
         currentDuplicates = new ArrayList<>();
         deleteButton.setEnabled(false);
         deleteButton.setAlpha(0.55f);
-        currentIsScreenshots = screenshots;
+        currentScanIsDevice = true;
         clearRows();
-        status.setText(screenshots ? "Checking screenshot files for exact matches…" : "Checking selected Downloads files…");
+        status.setText("Scanning accessible photos, videos, and your selected Downloads folder for exact matches…");
+        Uri downloads = savedDownloadsUri();
         worker.execute(() -> {
             try {
-                List<DuplicateScanner.FileItem> found = screenshots
-                        ? DuplicateScanner.scanScreenshots(this)
-                        : DuplicateScanner.scanSelectedFolder(this, folder);
-                runOnUiThread(() -> showResults(found, screenshots));
+                List<DuplicateScanner.FileItem> found = DuplicateScanner.scanDevice(this, downloads);
+                runOnUiThread(() -> showResults(found, true));
+            } catch (Exception error) {
+                runOnUiThread(() -> status.setText("I couldn’t finish the scan. Check photo/video access and try again."));
+            }
+        });
+    }
+
+    private void runScan(boolean downloadsOnly, Uri folder) {
+        currentDuplicates = new ArrayList<>();
+        deleteButton.setEnabled(false);
+        deleteButton.setAlpha(0.55f);
+        currentScanIsDevice = false;
+        clearRows();
+        status.setText(downloadsOnly ? "Checking selected Downloads files…" : "Checking files for exact matches…");
+        worker.execute(() -> {
+            try {
+                List<DuplicateScanner.FileItem> found = DuplicateScanner.scanSelectedFolder(this, folder);
+                runOnUiThread(() -> showResults(found, false));
             } catch (Exception error) {
                 runOnUiThread(() -> status.setText("I couldn’t read that location. Check its access and try again."));
             }
         });
     }
 
-    private void showResults(List<DuplicateScanner.FileItem> found, boolean screenshots) {
+    private void showResults(List<DuplicateScanner.FileItem> found, boolean deviceScan) {
         currentDuplicates = found;
         if (found.isEmpty()) {
-            status.setText(screenshots
-                    ? "No byte-for-byte duplicate screenshots found in the images this app can access."
+            status.setText(deviceScan
+                    ? "No exact duplicate photos, videos, or selected Downloads files found in the locations this app can access."
                     : "No byte-for-byte duplicate files found directly in the selected folder.");
             return;
         }
-        String area = screenshots ? "screenshot" : "file";
-        status.setText(found.size() + " duplicate " + area + (found.size() == 1 ? " copy" : " copies")
+        status.setText(found.size() + " exact duplicate " + (found.size() == 1 ? "copy" : "copies")
                 + " found. The oldest matching copy is kept.");
         for (DuplicateScanner.FileItem item : found) addResult(item);
         deleteButton.setEnabled(true);
@@ -238,35 +251,33 @@ public final class MainActivity extends Activity {
 
     private void deleteCurrentDuplicates() {
         if (currentDuplicates.isEmpty()) return;
-        if (currentIsScreenshots && Build.VERSION.SDK_INT >= 30) {
-            ArrayList<Uri> uris = new ArrayList<>();
-            for (DuplicateScanner.FileItem item : currentDuplicates) uris.add(item.uri);
+        ArrayList<Uri> mediaUris = new ArrayList<>();
+        int deletedDocuments = 0;
+        for (DuplicateScanner.FileItem item : new ArrayList<>(currentDuplicates)) {
+            if (item.mediaStoreItem) {
+                mediaUris.add(item.uri);
+            } else {
+                try { if (DocumentsContract.deleteDocument(getContentResolver(), item.uri)) deletedDocuments++; }
+                catch (Exception ignored) { }
+            }
+        }
+        if (!mediaUris.isEmpty() && Build.VERSION.SDK_INT >= 30) {
             try {
-                startIntentSenderForResult(MediaStore.createDeleteRequest(getContentResolver(), uris).getIntentSender(),
+                startIntentSenderForResult(MediaStore.createDeleteRequest(getContentResolver(), mediaUris).getIntentSender(),
                         REQUEST_DELETE, null, 0, 0, 0);
             } catch (IntentSender.SendIntentException error) {
                 status.setText("Android couldn’t open its delete confirmation. Nothing was deleted.");
             }
             return;
         }
-        if (!currentIsScreenshots) {
-            int deleted = 0;
-            for (DuplicateScanner.FileItem item : new ArrayList<>(currentDuplicates)) {
-                try {
-                    if (DocumentsContract.deleteDocument(getContentResolver(), item.uri)) deleted++;
-                } catch (Exception ignored) { }
-            }
-            status.setText(deleted + " duplicate file(s) removed from the selected Downloads folder.");
-            scanDownloads();
-            return;
-        }
-        if (Build.VERSION.SDK_INT <= 28 && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (!mediaUris.isEmpty() && Build.VERSION.SDK_INT <= 28 && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_LEGACY_WRITE);
             return;
         }
-        int deleted = 0;
+        int deleted = deletedDocuments;
         for (DuplicateScanner.FileItem item : new ArrayList<>(currentDuplicates)) {
+            if (!item.mediaStoreItem) continue;
             try { deleted += getContentResolver().delete(item.uri, null, null); }
             catch (RecoverableSecurityException recoverable) {
                 try {
@@ -276,15 +287,19 @@ public final class MainActivity extends Activity {
                 break;
             } catch (SecurityException ignored) { }
         }
-        status.setText(deleted + " duplicate screenshot(s) removed.");
-        requestScreenshotScan();
+        status.setText(deleted + " duplicate file(s) removed.");
+        if (currentScanIsDevice) startAutomaticScan(); else scanDownloads();
     }
 
     @Override public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] results) {
         super.onRequestPermissionsResult(requestCode, permissions, results);
         if (requestCode == REQUEST_MEDIA_PERMISSION) {
-            if (hasImagePermission()) requestScreenshotScan();
-            else status.setText("Photo access is off, so screenshots weren’t scanned.");
+            if (hasAnyMediaPermission()) runDeviceScan();
+            else {
+                Uri downloads = savedDownloadsUri();
+                if (downloads != null) runDeviceScan();
+                else status.setText("Photo and video access is off. Choose the Downloads folder to scan that location instead.");
+            }
         } else if (requestCode == REQUEST_LEGACY_WRITE) {
             if (results.length > 0 && results[0] == PackageManager.PERMISSION_GRANTED) deleteCurrentDuplicates();
             else status.setText("Storage write access was declined. Nothing was deleted.");
@@ -304,12 +319,13 @@ public final class MainActivity extends Activity {
             int flags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             getContentResolver().takePersistableUriPermission(tree, flags);
             getSharedPreferences(PREFS, MODE_PRIVATE).edit().putString(KEY_DOWNLOADS_TREE, tree.toString()).apply();
-            status.setText("Downloads folder saved. I’ll scan only files directly in that folder; subfolders are left alone.");
+            status.setText("Downloads folder saved. Starting a scan of accessible media and Downloads…");
+            startAutomaticScan();
         } else if (requestCode == REQUEST_DELETE && resultCode == RESULT_OK) {
-            status.setText("Android approved the screenshot cleanup. Refreshing the list…");
-            requestScreenshotScan();
+            status.setText("Android approved the cleanup. Refreshing the list…");
+            if (currentScanIsDevice) startAutomaticScan(); else scanDownloads();
         } else if (requestCode == REQUEST_DELETE) {
-            status.setText("Deletion cancelled. Your screenshots were left in place.");
+            status.setText("Deletion cancelled. Your files were left in place.");
         }
     }
 
