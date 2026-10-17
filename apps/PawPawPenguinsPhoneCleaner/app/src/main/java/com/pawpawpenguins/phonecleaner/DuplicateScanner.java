@@ -39,12 +39,18 @@ final class DuplicateScanner {
 
     static List<FileItem> scanDevice(Context context, Uri downloadsTree) throws Exception {
         Map<Long, List<FileItem>> sameSize = new HashMap<>();
-        addMedia(context, MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+        Uri imageCollection = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+                ? MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+                : MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        Uri videoCollection = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+                ? MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+                : MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+        addMedia(context, imageCollection,
                 MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME,
                 MediaStore.Images.Media.SIZE, MediaStore.Images.Media.DATE_ADDED,
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ? MediaStore.Images.Media.RELATIVE_PATH : MediaStore.Images.Media.DATA,
                 sameSize);
-        addMedia(context, MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+        addMedia(context, videoCollection,
                 MediaStore.Video.Media._ID, MediaStore.Video.Media.DISPLAY_NAME,
                 MediaStore.Video.Media.SIZE, MediaStore.Video.Media.DATE_ADDED,
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ? MediaStore.Video.Media.RELATIVE_PATH : MediaStore.Video.Media.DATA,
