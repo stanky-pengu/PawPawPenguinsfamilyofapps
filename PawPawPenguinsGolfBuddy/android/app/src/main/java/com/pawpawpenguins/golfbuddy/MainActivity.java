@@ -37,7 +37,7 @@ import java.util.Locale;
 public class MainActivity extends Activity {
     private static final int GREEN=Color.rgb(18,61,53), GREEN2=Color.rgb(29,102,82);
     private static final int CREAM=Color.rgb(250,248,239), MINT=Color.rgb(223,242,232);
-    private static final int INK=Color.rgb(23,52,46), MUTED=Color.rgb(115,132,125);
+    private static final int INK=Color.rgb(23,52,46), MUTED=Color.rgb(115,132,125), GOLD=Color.rgb(245,185,76);
     private SharedPreferences prefs;
     private Round round;
     private EditText course;
@@ -89,7 +89,10 @@ public class MainActivity extends Activity {
         LinearLayout heroText=new LinearLayout(this);
         heroText.setOrientation(LinearLayout.VERTICAL);
         heroText.setPadding(dp(12),0,0,0);
-        heroText.addView(text("PawPawPenguins",11,Color.rgb(205,233,218),true));
+        LinearLayout brandLine=new LinearLayout(this); brandLine.setGravity(Gravity.CENTER_VERTICAL);
+        brandLine.addView(text("PawPawPenguins",11,Color.rgb(205,233,218),true));
+        TextView friendSeal=friendMadeStamp(); LinearLayout.LayoutParams sealLp=new LinearLayout.LayoutParams(dp(36),dp(28)); sealLp.leftMargin=dp(6); brandLine.addView(friendSeal,sealLp);
+        heroText.addView(brandLine);
         heroText.addView(text("Golf Buddy",25,Color.WHITE,true));
         heroText.addView(text("Your friendly golf scorecard",13,Color.rgb(225,239,231),false));
         hero.addView(heroText,new LinearLayout.LayoutParams(0,-2,1));
@@ -315,6 +318,11 @@ public class MainActivity extends Activity {
     }
     private void toast(String text){Toast.makeText(this,text,Toast.LENGTH_SHORT).show();}
 
+    private TextView friendMadeStamp(){
+        TextView seal=text("FRIEND\\nMADE",7,GOLD,true);seal.setGravity(Gravity.CENTER);seal.setLineSpacing(0,0.88f);
+        seal.setContentDescription("Gold FRIEND MADE PawPawPenguins seal");seal.setTag("friend_made_stamp");
+        GradientDrawable badge=new GradientDrawable();badge.setShape(GradientDrawable.OVAL);badge.setColor(GREEN);badge.setStroke(dp(1),GOLD);seal.setBackground(badge);return seal;
+    }
     private LinearLayout card(){LinearLayout x=new LinearLayout(this);x.setOrientation(LinearLayout.VERTICAL);x.setPadding(dp(15),dp(14),dp(15),dp(14));x.setBackground(box(Color.WHITE,20));return x;}
     private void addSection(LinearLayout parent,View child){LinearLayout.LayoutParams lp=full();lp.topMargin=dp(12);parent.addView(child,lp);}
     private LinearLayout.LayoutParams full(){return new LinearLayout.LayoutParams(-1,-2);}
