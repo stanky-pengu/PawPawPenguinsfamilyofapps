@@ -22,8 +22,12 @@ The app's display name is now **PawPawPenguins Calculator**. The two separate in
 - Source review: **PASS** for the listed permissions, data handling, and integrations.
 - Change review: **PASS** for the visible app name, version code/name, single scene resource reference, and accessibility description.
 - Arithmetic engine source and existing unit tests were not changed.
-- Android compilation, automated unit tests, APK signing, APK SHA-256, and physical-device appearance/accessibility checks are **pending** for 1.1.4. No 1.1.3 build hash or test result is carried forward as evidence for this version.
+- GitHub Actions run [39028548338](https://github.com/stanky-pengu/PawPawPenguinsfamilyofapps/actions/runs/39028548338), run 21: **PASS** — Gradle unit tests, debug APK assembly, and the source arithmetic smoke test.
+- APK SHA-256: `1c20007f50a977310dd8c7d184fb68ff33afbd612e8e5291b28c613b8073a7ea`.
+- Downloaded CI artifact ZIP SHA-256: `e791ed89ec9c12082adbb18e3e0dd5517de6fff1cd0f46f05bedf31362715654`.
+- APK signature verification was **not independently run** in this workspace; the APK is the Gradle debug build artifact. No 1.1.3 hash or test result is carried forward as evidence for this version.
+- Physical-device appearance and accessibility checks remain **pending**.
 
 ## Limits and next checks
 
-Build and run the existing Gradle unit tests, inspect the packaged APK identity and permissions, verify the APK signature, and record its SHA-256. Then check the scene crop and app title on the target phone, including a screen-reader description. CI checks cannot establish phone appearance or usability. The debug build is not a release-signed Play Store package; a persistent release key is needed for seamless in-place updates across builds.
+Check the scene crop and app title on the target phone, including a screen-reader description. CI checks cannot establish phone appearance or usability. The debug build is not a release-signed Play Store package; a persistent release key is needed for seamless in-place updates across builds.
