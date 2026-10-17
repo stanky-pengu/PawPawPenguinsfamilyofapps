@@ -77,6 +77,56 @@ public final class CalculatorEngine {
         }
     }
 
+    public void constant(double value) {
+        if (error != null || !Double.isFinite(value)) return;
+        entry = format(BigDecimal.valueOf(value));
+        replaceEntry = pending == null;
+    }
+
+    /** Applies a scientific function to the displayed value. Trigonometry uses the selected angle unit. */
+    public void scientific(String function, boolean radians) {
+        if (error != null) return;
+        try {
+            double value = Double.parseDouble(entry);
+            double result;
+            switch (function) {
+                case "sin": result = Math.sin(radians ? value : Math.toRadians(value)); break;
+                case "cos": result = Math.cos(radians ? value : Math.toRadians(value)); break;
+                case "tan":
+                    double angle = radians ? value : Math.toRadians(value);
+                    if (Math.abs(Math.cos(angle)) < 1e-14) throw new ArithmeticException("undefined tangent");
+                    result = Math.tan(angle);
+                    break;
+                case "sqrt":
+                    if (value < 0) throw new ArithmeticException("negative square root");
+                    result = Math.sqrt(value);
+                    break;
+                case "square": result = value * value; break;
+                case "reciprocal":
+                    if (value == 0) throw new ArithmeticException("division by zero");
+                    result = 1d / value;
+                    break;
+                case "ln":
+                    if (value <= 0) throw new ArithmeticException("invalid logarithm");
+                    result = Math.log(value);
+                    break;
+                case "log":
+                    if (value <= 0) throw new ArithmeticException("invalid logarithm");
+                    result = Math.log10(value);
+                    break;
+                default: return;
+            }
+            if (!Double.isFinite(result)) throw new ArithmeticException("non-finite result");
+            entry = format(BigDecimal.valueOf(result).round(new MathContext(15, RoundingMode.HALF_UP)));
+            replaceEntry = pending == null;
+        } catch (NumberFormatException ex) {
+            setInvalid();
+        } catch (ArithmeticException ex) {
+            if ("division by zero".equals(ex.getMessage())) setError();
+            else setInvalid();
+        }
+    }
+
     public void operator(char op) {
         if ("+-*/".indexOf(op) < 0 || error != null) return;
         try {
@@ -128,4 +178,12 @@ public final class CalculatorEngine {
         replaceEntry = true;
         error = "Cannot divide by zero";
     }
+
+    private void setInvalid() {
+        entry = "0";
+        pending = null;
+        replaceEntry = true;
+        error = "Invalid input";
+    }
 }
+
