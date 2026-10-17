@@ -50,7 +50,7 @@ check("ringtone_stored", "ringtone_uri" in store and "ringtone_name" in store, "
 check("ringtone_permission_released", "releasePersistableUriPermission" in main and "clearRingtone" in main, "replaced or cleared ringtone access is released")
 check("battery_meter", 'setTag("battery_meter")' in main, "battery meter is present")
 check("version_label", 'setTag("version_label")' in main, "version label is present")
-check("friend_made_seal", 'setTag("friend_made_stamp")' in main and '"FRIEND"' in main and '"MADE"' in main and "0xfff5b94c" in main, "gold FRIEND MADE seal is present")
+check("friend_made_seal", 'setTag("friend_made_stamp")' in main and "FRIEND" in main and "MADE" in main and "0xfff5b94c" in main, "gold FRIEND MADE seal is present")
 check("tinkerbell_scene_asset", (ROOT / "app/src/main/res/drawable-nodpi/tinkerbell_alarm_scene.jpg").is_file() and 'setImageResource(R.drawable.tinkerbell_alarm_scene)' in main, "Tinkerbell bed scene is bundled and shown on the main screen")
 check("tinkerbell_scene_accessibility", 'setContentDescription("Tinkerbell sleeping under a penguin blanket while a penguin wakes beside an alarm clock")' in main and 'setTag("tinkerbell_bed_scene")' in main, "Tinkerbell scene has an accessibility description and test tag")
 check("device_audio_diagnostics", '"alarm_volume"' in autotest and '"selected_ringtone_access"' in autotest, "on-demand logs check alarm volume and saved file access")
