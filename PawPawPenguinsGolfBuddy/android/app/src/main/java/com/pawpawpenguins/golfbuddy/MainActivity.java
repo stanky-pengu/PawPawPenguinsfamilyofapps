@@ -319,7 +319,7 @@ public class MainActivity extends Activity {
     private void toast(String text){Toast.makeText(this,text,Toast.LENGTH_SHORT).show();}
 
     private TextView friendMadeStamp(){
-        TextView seal=text("FRIEND\\nMADE",7,GOLD,true);seal.setGravity(Gravity.CENTER);seal.setLineSpacing(0,0.88f);
+        TextView seal=text("FRIEND\nMADE",7,GOLD,true);seal.setGravity(Gravity.CENTER);seal.setLineSpacing(0,0.88f);
         seal.setContentDescription("Gold FRIEND MADE PawPawPenguins seal");seal.setTag("friend_made_stamp");
         GradientDrawable badge=new GradientDrawable();badge.setShape(GradientDrawable.OVAL);badge.setColor(GREEN);badge.setStroke(dp(1),GOLD);seal.setBackground(badge);return seal;
     }
