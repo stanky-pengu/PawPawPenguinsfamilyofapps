@@ -2,6 +2,21 @@ plugins {
     id 'com.android.application'
 }
 
+def sceneBase64 = file('src/main/res/drawable-nodpi/math_classroom_scene.jpg.base64')
+def sceneJpeg = file('src/main/res/drawable-nodpi/math_classroom_scene.jpg')
+
+tasks.register('decodeMascotScene') {
+    inputs.file(sceneBase64)
+    outputs.file(sceneJpeg)
+    doLast {
+        sceneJpeg.bytes = java.util.Base64.decoder.decode(sceneBase64.text.trim())
+    }
+}
+
+tasks.named('preBuild').configure {
+    dependsOn('decodeMascotScene')
+}
+
 android {
     namespace 'com.pawpawpenguins.calculator'
     compileSdk 35
@@ -10,8 +25,8 @@ android {
         applicationId 'com.pawpawpenguins.calculator'
         minSdk 23
         targetSdk 35
-        versionCode 5
-        versionName '1.1.3'
+        versionCode 6
+        versionName '1.1.4'
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
 
