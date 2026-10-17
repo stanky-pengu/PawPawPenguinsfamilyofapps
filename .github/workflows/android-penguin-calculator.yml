@@ -5,6 +5,10 @@ on:
     paths:
       - 'Penguincalculator/**'
       - '.github/workflows/android-penguin-calculator.yml'
+  pull_request:
+    paths:
+      - 'Penguincalculator/**'
+      - '.github/workflows/android-penguin-calculator.yml'
   workflow_dispatch:
 
 jobs:
