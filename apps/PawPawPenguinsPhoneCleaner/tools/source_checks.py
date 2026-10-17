@@ -28,5 +28,7 @@ assert "android:allowBackup=\"false\"" in (ROOT / "app/src/main/AndroidManifest.
 assert "FRIEND\\nMADE" in activity
 assert "phone_cleaner_friends.jpg.base64" in (ROOT / "app/build.gradle").read_text()
 assert "phone_cleaner_icon.jpg.base64" in (ROOT / "app/build.gradle").read_text()
+assert "phone_cleaner_penguin_phone_icon.jpg.base64" in (ROOT / "app/build.gradle").read_text()
+assert "@drawable/phone_cleaner_penguin_phone_icon" in (ROOT / "app/src/main/AndroidManifest.xml").read_text()
 assert "PawPawPenguins Phone Cleaner" in (ROOT / "README.md").read_text()
-print("Source checks passed: permissions, local-only handling, exact hashing, duplicate policy, SAF, system media deletion, scene, seal, and app identity.")
+print("Source checks passed: permissions, local-only handling, exact hashing, duplicate policy, SAF, system media deletion, scene, seal, launcher icon, and app identity.")

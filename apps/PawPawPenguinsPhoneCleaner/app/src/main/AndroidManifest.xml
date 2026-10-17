@@ -7,7 +7,7 @@
 
     <application
         android:allowBackup="false"
-        android:icon="@drawable/phone_cleaner_icon"
+        android:icon="@drawable/phone_cleaner_penguin_phone_icon"
         android:label="PawPawPenguins Phone Cleaner"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">

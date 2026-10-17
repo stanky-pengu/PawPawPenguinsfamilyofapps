@@ -1,10 +1,10 @@
-# Security Evaluation — PawPawPenguins Phone Cleaner 1.1.0
+# Security Evaluation — PawPawPenguins Phone Cleaner 1.2.0
 
-**Review scope:** Source review and change-focused checks for the automatic duplicate scan; not a penetration test or formal security certification.
+**Review scope:** Source review and change-focused checks for the penguin phone app icon; not a penetration test or formal security certification.
 
 ## Change summary
 
-The app now starts scanning when opened. It compares photos and videos available through Android MediaStore and, when configured, direct files in the user-selected Downloads folder. It hashes locally, keeps the oldest exact match, and presents redundant copies for review. Android 14 selected-photo access can limit photo coverage to selected items. The app does not delete anything until the user invokes cleanup; Android confirms media deletion on Android 11 and newer.
+The launcher icon now shows the penguin mascot holding a phone. The automatic duplicate scan behavior from 1.1.0 is unchanged: it compares accessible photos and videos and, when configured, direct files in the selected Downloads folder. Android 14 selected-photo access can limit photo coverage. The user reviews matches and initiates deletion; Android confirms media deletion on Android 11 and newer.
 
 ## Privacy and security
 
@@ -17,8 +17,8 @@ The app now starts scanning when opened. It compares photos and videos available
 
 ## Verification status
 
-- Host-side duplicate policy tests: **PENDING**.
-- Android source checks: **PENDING**.
-- Debug APK assembly: **PENDING**.
-- Physical-device scan/delete and appearance checks: **PENDING**.
+- Host-side duplicate policy tests: **PASS** in GitHub Actions run 39039288638.
+- Android source checks: **PASS** in GitHub Actions run 39039288638.
+- Debug APK assembly: **PENDING CI**.
+- Physical-device scan/delete and appearance checks: **not performed** in this build environment.
 - Play Store release signing: **not configured**; this project produces a debug APK.

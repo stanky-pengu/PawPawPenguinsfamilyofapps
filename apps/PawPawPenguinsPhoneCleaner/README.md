@@ -21,4 +21,4 @@ All scanning and hashing run locally. The app does not request Internet or all-f
 gradle test assembleDebug
 ```
 
-Version: 1.1.0 (version code 2). Package: `com.pawpawpenguins.phonecleaner`.
+Version: 1.2.0 (version code 3). Package: `com.pawpawpenguins.phonecleaner`.
