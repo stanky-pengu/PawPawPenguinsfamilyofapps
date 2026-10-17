@@ -100,7 +100,7 @@ public class MainActivity extends Activity {
         Button privacy = button("Privacy Policy", 0xff367f9c); privacy.setTag("privacy_policy"); privacy.setOnClickListener(v -> startActivity(new Intent(this, PrivacyPolicyActivity.class))); marginTop(privacy, 8); root.addView(privacy);
     }
     private TextView friendMadeStamp() {
-        TextView seal = text("FRIEND\\nMADE", 7, 0xfff5b94c, true);
+        TextView seal = text("FRIEND\nMADE", 7, 0xfff5b94c, true);
         seal.setGravity(Gravity.CENTER); seal.setLineSpacing(0, 0.88f);
         seal.setContentDescription("Gold FRIEND MADE PawPawPenguins seal"); seal.setTag("friend_made_stamp");
         GradientDrawable badge = new GradientDrawable(); badge.setShape(GradientDrawable.OVAL); badge.setColor(INK); badge.setStroke(dp(1), 0xfff5b94c);
