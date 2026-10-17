@@ -17,6 +17,7 @@ public class MainActivityTest {
             scenario.onActivity(activity -> {
                 android.view.View decor = activity.getWindow().getDecorView();
                 assertNotNull(decor.findViewWithTag("friend_made_stamp"));
+                assertNotNull(decor.findViewWithTag("tinkerbell_bed_scene"));
                 assertNotNull(decor.findViewWithTag("version_label"));
                 assertTrue(((android.widget.TextView) decor.findViewWithTag("version_label")).getText().toString().contains(BuildConfig.VERSION_NAME));
                 assertNotNull(decor.findViewWithTag("battery_meter"));

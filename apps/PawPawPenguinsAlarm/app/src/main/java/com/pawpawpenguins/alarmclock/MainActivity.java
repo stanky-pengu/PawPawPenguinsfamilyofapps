@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -82,6 +83,16 @@ public class MainActivity extends Activity {
         LinearLayout.LayoutParams sealParams = new LinearLayout.LayoutParams(dp(40), dp(36)); sealParams.leftMargin = dp(8);
         titleRow.addView(friendSeal, sealParams);
         TextView subtitle = text("Tap a time to change it. Turn on only the days you need.", 15, MUTED, false); marginTop(subtitle, 4); root.addView(subtitle);
+        ImageView bedScene = new ImageView(this);
+        bedScene.setImageResource(R.drawable.tinkerbell_alarm_scene);
+        bedScene.setContentDescription("Tinkerbell sleeping under a penguin blanket while a penguin wakes beside an alarm clock");
+        bedScene.setTag("tinkerbell_bed_scene");
+        bedScene.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        bedScene.setBackground(round(Color.WHITE, 18));
+        bedScene.setClipToOutline(true);
+        LinearLayout.LayoutParams sceneParams = new LinearLayout.LayoutParams(-1, dp(156));
+        sceneParams.topMargin = dp(12);
+        root.addView(bedScene, sceneParams);
         batteryView = text("🔋 Battery --%", 14, INK, true); batteryView.setTag("battery_meter"); batteryView.setPadding(dp(12), dp(11), dp(12), dp(11)); batteryView.setBackground(round(0xfff7fcff, 16)); marginTop(batteryView, 14); root.addView(batteryView);
         weekList = new LinearLayout(this); weekList.setOrientation(LinearLayout.VERTICAL); marginTop(weekList, 8); root.addView(weekList); renderDays();
 
