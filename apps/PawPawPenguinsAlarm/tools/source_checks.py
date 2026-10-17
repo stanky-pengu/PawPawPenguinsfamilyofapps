@@ -33,7 +33,7 @@ except Exception as exc:
     check("manifest_xml", False, f"{type(exc).__name__}: {exc}")
 
 gradle = (ROOT / "app/build.gradle").read_text()
-check("version_configured", "versionName '1.2.0'" in gradle and "versionCode 3" in gradle and "targetSdk 36" in gradle, "version 1.2.0 targets API 36")
+check("version_configured", "versionName '1.2.1'" in gradle and "versionCode 4" in gradle and "targetSdk 36" in gradle, "version 1.2.1 targets API 36")
 check("unit_test_source", (ROOT / "app/src/test/java/com/pawpawpenguins/alarmclock/ScheduleTest.java").is_file(), "weekly schedule JUnit tests are present")
 check("instrumentation_test_source", (ROOT / "app/src/androidTest/java/com/pawpawpenguins/alarmclock/MainActivityTest.java").is_file(), "Android UI instrumentation tests are present")
 check("privacy_policy_asset", (ROOT / "app/src/main/assets/privacy-policy.txt").is_file(), "privacy policy is available offline in the app")
@@ -50,6 +50,7 @@ check("ringtone_stored", "ringtone_uri" in store and "ringtone_name" in store, "
 check("ringtone_permission_released", "releasePersistableUriPermission" in main and "clearRingtone" in main, "replaced or cleared ringtone access is released")
 check("battery_meter", 'setTag("battery_meter")' in main, "battery meter is present")
 check("version_label", 'setTag("version_label")' in main, "version label is present")
+check("friend_made_seal", 'setTag("friend_made_stamp")' in main and '"FRIEND\\nMADE"' in main, "gold FRIEND MADE seal is present")
 check("device_audio_diagnostics", '"alarm_volume"' in autotest and '"selected_ringtone_access"' in autotest, "on-demand logs check alarm volume and saved file access")
 check("no_persistent_diagnostics", "FileWriter" not in autotest and main.count("AutoTestLog.run(this") == 1, "diagnostics run only on request and are not written to app storage")
 check("penguin_loading_animation", (MAIN / "PenguinLoadingView.java").is_file() and 'setTag("penguin_loading")' in main, "animated mascot splash is present")
