@@ -49,18 +49,19 @@ final class DuplicateScanner {
                 MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME,
                 MediaStore.Images.Media.SIZE, MediaStore.Images.Media.DATE_ADDED,
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ? MediaStore.Images.Media.RELATIVE_PATH : MediaStore.Images.Media.DATA,
-                sameSize);
+                downloadsTree != null, sameSize);
         addMedia(context, videoCollection,
                 MediaStore.Video.Media._ID, MediaStore.Video.Media.DISPLAY_NAME,
                 MediaStore.Video.Media.SIZE, MediaStore.Video.Media.DATE_ADDED,
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ? MediaStore.Video.Media.RELATIVE_PATH : MediaStore.Video.Media.DATA,
-                sameSize);
+                downloadsTree != null, sameSize);
         if (downloadsTree != null) addFolder(context, downloadsTree, sameSize);
         return findRedundant(context, sameSize);
     }
 
     private static void addMedia(Context context, Uri collection, String idKey, String nameKey,
                                  String sizeKey, String dateKey, String pathKey,
+                                 boolean excludeDownloads,
                                  Map<Long, List<FileItem>> sameSize) {
         ContentResolver resolver = context.getContentResolver();
         String[] projection = {idKey, nameKey, sizeKey, dateKey, pathKey};
@@ -77,6 +78,7 @@ final class DuplicateScanner {
                 long id = cursor.getLong(idColumn);
                 String name = cursor.getString(nameColumn);
                 String path = pathColumn >= 0 ? cursor.getString(pathColumn) : "";
+                if (excludeDownloads && isInDownloads(path)) continue;
                 Uri itemUri = Uri.withAppendedPath(collection, Long.toString(id));
                 FileItem item = new FileItem(itemUri, name == null ? "Media file" : name,
                         path == null || path.isEmpty() ? "Photos and videos" : path,
@@ -86,6 +88,13 @@ final class DuplicateScanner {
         } catch (SecurityException ignored) {
             // Android may grant only one media type or a selected-photo subset.
         }
+    }
+
+    private static boolean isInDownloads(String path) {
+        if (path == null) return false;
+        String normalized = path.replace('\\', '/').toLowerCase(Locale.ROOT);
+        return normalized.startsWith("download/") || normalized.startsWith("downloads/")
+                || normalized.contains("/download/") || normalized.contains("/downloads/");
     }
 
     /** Scans direct files only; subfolders are deliberately left untouched. */
