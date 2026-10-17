@@ -20,7 +20,8 @@ assert "lowerPath.contains(\"screenshot\") || lowerName.contains(\"screenshot\")
 assert "oldest item in each exact-hash group is kept" in policy
 assert "MediaStore.createDeleteRequest" in activity
 assert "ACTION_OPEN_DOCUMENT_TREE" in activity
-assert "Downloads subfolders are not" not in activity
+assert "for (DocumentFile file : tree.listFiles())" in scanner
+assert "if (!file.isFile()" in scanner
 assert "android:allowBackup=\"false\"" in (ROOT / "app/src/main/AndroidManifest.xml").read_text()
 assert "FRIEND\\nMADE" in activity
 assert "phone_cleaner_friends.jpg.base64" in (ROOT / "app/build.gradle").read_text()

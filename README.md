@@ -24,3 +24,17 @@ gradle testDebugUnitTest assembleDebug assembleDebugAndroidTest bundleRelease
 ```
 
 GitHub Actions also runs source checks, tests, and Android emulator instrumentation. The current CI release bundle is unsigned and is not a consumer installation package.
+
+## PawPawPenguins Phone Cleaner
+
+The Android phone cleaner source is in [apps/PawPawPenguinsPhoneCleaner](apps/PawPawPenguinsPhoneCleaner/).
+
+- **Version:** 1.0.0
+- **Privacy:** Offline scanning; no Internet permission.
+- **Duplicate handling:** Exact SHA-256 matches only. Keeps the oldest copy, scans only the user-selected Downloads folder directly (not its subfolders), and asks Android to approve screenshot deletion on Android 11 and newer.
+
+Build with JDK 17 and Gradle 8.9:
+
+```sh
+gradle -p apps/PawPawPenguinsPhoneCleaner test assembleDebug
+```
