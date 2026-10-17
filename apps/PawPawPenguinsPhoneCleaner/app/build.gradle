@@ -1,0 +1,51 @@
+plugins {
+    id 'com.android.application'
+}
+
+def sceneBase64 = file('scene-assets/phone_cleaner_friends.jpg.base64')
+def sceneJpeg = file('src/main/res/drawable-nodpi/phone_cleaner_friends.jpg')
+def iconBase64 = file('scene-assets/phone_cleaner_icon.jpg.base64')
+def iconJpeg = file('src/main/res/drawable-nodpi/phone_cleaner_icon.jpg')
+
+tasks.register('decodeFriendsScene') {
+    inputs.file(sceneBase64)
+    inputs.file(iconBase64)
+    outputs.files(sceneJpeg, iconJpeg)
+    doLast {
+        sceneJpeg.parentFile.mkdirs()
+        sceneJpeg.bytes = java.util.Base64.decoder.decode(sceneBase64.text.trim())
+        iconJpeg.bytes = java.util.Base64.decoder.decode(iconBase64.text.trim())
+    }
+}
+
+tasks.named('preBuild').configure {
+    dependsOn('decodeFriendsScene')
+}
+
+android {
+    namespace 'com.pawpawpenguins.phonecleaner'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.pawpawpenguins.phonecleaner'
+        minSdk 26
+        targetSdk 35
+        versionCode 1
+        versionName '1.0.0'
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+}
+
+dependencies {
+    implementation 'androidx.documentfile:documentfile:1.0.1'
+    testImplementation 'junit:junit:4.13.2'
+}
