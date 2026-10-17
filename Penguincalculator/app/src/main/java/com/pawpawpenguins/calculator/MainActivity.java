@@ -60,37 +60,21 @@ public final class MainActivity extends Activity {
         root.addView(brand, new LinearLayout.LayoutParams(-1, dp(32)));
 
         TextView title = new TextView(this);
-        title.setText("Penguin Calculator");
+        title.setText("PawPawPenguins Calculator");
         title.setTextColor(WHITE);
-        title.setTextSize(22);
+        title.setTextSize(20);
         title.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+        title.setSingleLine(true);
         root.addView(title, new LinearLayout.LayoutParams(-1, dp(38)));
 
-        LinearLayout mascotRow = new LinearLayout(this);
-        mascotRow.setOrientation(LinearLayout.HORIZONTAL);
-        mascotRow.setGravity(Gravity.CENTER);
-        mascotRow.setBackgroundColor(Color.WHITE);
-
-        ImageView mascot = new ImageView(this);
-        mascot.setImageResource(R.drawable.penguin_calculator_mascot);
-        mascot.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        mascot.setContentDescription("Cute penguin holding a calculator");
-        mascot.setBackgroundColor(Color.WHITE);
-        mascot.setPadding(dp(4), dp(2), dp(4), dp(2));
-        mascotRow.addView(mascot, new LinearLayout.LayoutParams(dp(94), dp(94)));
-
-        ImageView sealBuddy = new ImageView(this);
-        sealBuddy.setImageResource(R.drawable.seal_buddy);
-        sealBuddy.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        sealBuddy.setContentDescription("Cute baby seal buddy");
-        sealBuddy.setPadding(dp(2), dp(2), dp(2), dp(2));
-        LinearLayout.LayoutParams sealParams = new LinearLayout.LayoutParams(dp(82), dp(94));
-        sealParams.setMargins(dp(6), 0, 0, 0);
-        mascotRow.addView(sealBuddy, sealParams);
-
-        LinearLayout.LayoutParams mascotRowParams = new LinearLayout.LayoutParams(-1, dp(94));
-        mascotRowParams.gravity = Gravity.CENTER_HORIZONTAL;
-        root.addView(mascotRow, mascotRowParams);
+        ImageView lessonScene = new ImageView(this);
+        lessonScene.setImageResource(R.drawable.math_classroom_scene);
+        lessonScene.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        lessonScene.setContentDescription(
+                "A baby seal teaches the penguin math beside a board showing two plus three equals five");
+        LinearLayout.LayoutParams sceneParams = new LinearLayout.LayoutParams(-1, dp(96));
+        sceneParams.setMargins(0, 0, 0, dp(4));
+        root.addView(lessonScene, sceneParams);
 
         LinearLayout screen = new LinearLayout(this);
         screen.setOrientation(LinearLayout.VERTICAL);
