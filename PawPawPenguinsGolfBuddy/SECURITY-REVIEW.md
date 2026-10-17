@@ -12,9 +12,10 @@ Course name, date, pars, and hole scores are stored in Android app-private prefe
 - Version: `0.2.3` (versionCode 5)
 - Minimum SDK: 26
 - Target SDK: 36
-- Build and signature for version 0.2.3: **PENDING CI**.
-- Previous version 0.2.2 verification: [GitHub Actions run 38992911588](https://github.com/stanky-pengu/PawPawPenguinsfamilyofapps/actions/runs/38992911588) passed build and APK signature checks.
-- Previous 0.2.2 APK SHA-256: `70efc25e19e92d9bda2ffd5591bf7968564e6559621e7479fd9172cbb6d96e23`.
+- Build: **PASS** — [GitHub Actions run 39030319000](https://github.com/stanky-pengu/PawPawPenguinsfamilyofapps/actions/runs/39030319000), Android SDK 36, Build Tools 36.0.0, Gradle 9.6.0.
+- APK signature: **PASS** — apksigner verified APK Signature Scheme v2; one Android Debug signer.
+- APK SHA-256: `fa31503e13c4c3f678b47596bc427f0fd81d6a99396c924873acb0884765cb8f`.
+- Debug certificate SHA-256: `5b3771015aa0cbb51a0cfa2bbb5df21634517e886150a52e87c52d0578e2f398`.
 - On-device launch and interaction testing: **NOT RUN** — no physical Android device was connected during this build
 
 ## Release status
