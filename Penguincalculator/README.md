@@ -1,10 +1,11 @@
 # PawPawPenguins Penguin Calculator
 
-Version 1.1.1 is a rebranded rebuild of the earlier Big Calculator.
+Version 1.1.2 is a rebranded rebuild of the earlier Big Calculator. The penguin mascot is joined by a seal buddy on the calculator screen.
 
 ## Preserved behavior
 
 - Extra-large, high-contrast number display and oversized tap targets
+- Cute penguin and seal buddy mascots
 - Addition, subtraction, multiplication, division and percent
 - Decimal input, sign toggle, clear, backspace and chained operations
 - Dark screen, offline operation and no advertising

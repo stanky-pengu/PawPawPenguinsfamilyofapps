@@ -28,6 +28,6 @@ jobs:
           java -cp /tmp/penguin-calc-classes EngineSmokeTest
       - uses: actions/upload-artifact@v4
         with:
-          name: PenguinCalculator-1.1.1-debug
+          name: PenguinCalculator-1.1.2-debug
           path: Penguincalculator/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
