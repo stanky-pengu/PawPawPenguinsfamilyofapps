@@ -32,6 +32,20 @@ public final class EngineSmokeTest {
 
         c.digit('4'); c.toggleSign();
         check("-4", c.display(), "sign toggle");
-        System.out.println("PASS: 6 engine smoke checks");
+
+        c.clear();
+        c.digit('3'); c.digit('0'); c.scientific("sin", false);
+        check("0.5", c.display(), "sine in degrees");
+
+        c.clear();
+        c.digit('9'); c.scientific("sqrt", false);
+        check("3", c.display(), "square root");
+
+        c.clear();
+        c.digit('2'); c.operator('+'); c.constant(Math.PI); c.equals();
+        check("5.141592653589793", c.display(), "pi with pending addition");
+
+        System.out.println("PASS: 10 engine smoke checks");
     }
 }
+
