@@ -1,6 +1,6 @@
 # PawPawPenguins Golf Buddy
 
-Native Android golf scorecard app, version 0.2.1. The `android/` folder is the Android Studio/Gradle project. The earlier `index.html` prototype remains as a lightweight preview.
+Native Android golf scorecard app, version 0.2.2. The `android/` folder is the Android Studio/Gradle project. The earlier `index.html` prototype remains as a lightweight preview.
 
 ## App features
 
@@ -10,7 +10,7 @@ Native Android golf scorecard app, version 0.2.1. The `android/` folder is the A
 - Saved rounds stored locally on the phone
 - Share scorecard text with Android's share sheet
 - Offline operation; no account, network calls, location, or runtime permissions
-- Updated app icon and in-app mascot artwork matched to the PawPawPenguins Alarm Clock penguin
+- Paired penguin and squirrel golf scene in the app header; both mascots hold golf clubs
 
 ## Open and build
 
@@ -23,4 +23,4 @@ The debug APK is for testing and uses a debug signing key. It cannot be publishe
 Package: `com.pawpawpenguins.golfbuddy`  
 Minimum Android version: Android 8.0 (API 26)  
 Target Android version: API 36  
-Version: `0.2.1` (versionCode 3)
+Version: `0.2.2` (versionCode 4)

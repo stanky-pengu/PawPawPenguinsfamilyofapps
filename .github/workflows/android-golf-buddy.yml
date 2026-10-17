@@ -3,7 +3,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'PawPawPenguinsGolfBuddy/**'
+      - 'PawPawPenguinsGolfBuddy/android/**'
       - '.github/workflows/android-golf-buddy.yml'
   workflow_dispatch:
 
@@ -30,15 +30,15 @@ jobs:
       - name: Build debug APK
         run: gradle -p PawPawPenguinsGolfBuddy/android --no-daemon assembleDebug --stacktrace
       - name: Prepare downloadable APK
-        run: cp PawPawPenguinsGolfBuddy/android/app/build/outputs/apk/debug/app-debug.apk PawPawPenguinsGolfBuddy-0.2.1-debug.apk
+        run: cp PawPawPenguinsGolfBuddy/android/app/build/outputs/apk/debug/app-debug.apk PawPawPenguinsGolfBuddy-0.2.2-debug.apk
       - name: Verify APK and record SHA-256
         run: |
-          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs PawPawPenguinsGolfBuddy-0.2.1-debug.apk
-          sha256sum PawPawPenguinsGolfBuddy-0.2.1-debug.apk > PawPawPenguinsGolfBuddy-0.2.1-debug.apk.sha256
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs PawPawPenguinsGolfBuddy-0.2.2-debug.apk
+          sha256sum PawPawPenguinsGolfBuddy-0.2.2-debug.apk > PawPawPenguinsGolfBuddy-0.2.2-debug.apk.sha256
       - uses: actions/upload-artifact@v4
         with:
-          name: PawPawPenguinsGolfBuddy-0.2.1-debug
+          name: PawPawPenguinsGolfBuddy-0.2.2-debug
           path: |
-            PawPawPenguinsGolfBuddy-0.2.1-debug.apk
-            PawPawPenguinsGolfBuddy-0.2.1-debug.apk.sha256
+            PawPawPenguinsGolfBuddy-0.2.2-debug.apk
+            PawPawPenguinsGolfBuddy-0.2.2-debug.apk.sha256
           if-no-files-found: error

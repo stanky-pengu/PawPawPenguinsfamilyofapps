@@ -82,10 +82,10 @@ public class MainActivity extends Activity {
         hero.setPadding(dp(16),dp(12),dp(16),dp(14));
         hero.setBackground(box(GREEN,24));
         ImageView mascot=new ImageView(this);
-        mascot.setImageResource(R.drawable.ic_golf_buddy_mascot);
+        mascot.setImageResource(R.drawable.golf_buddies_scene);
         mascot.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        mascot.setContentDescription("PawPawPenguins penguin mascot holding a golf club");
-        hero.addView(mascot,new LinearLayout.LayoutParams(dp(92),dp(92)));
+        mascot.setContentDescription("PawPawPenguins penguin and squirrel playing golf together; both holding golf clubs");
+        hero.addView(mascot,new LinearLayout.LayoutParams(dp(132),dp(92)));
         LinearLayout heroText=new LinearLayout(this);
         heroText.setOrientation(LinearLayout.VERTICAL);
         heroText.setPadding(dp(12),0,0,0);
