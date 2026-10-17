@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
 }
 
-def sceneBase64 = file('src/main/res/drawable-nodpi/math_classroom_scene.jpg.base64')
+def sceneBase64 = file('scene-assets/math_classroom_scene.jpg.base64')
 def sceneJpeg = file('src/main/res/drawable-nodpi/math_classroom_scene.jpg')
 
 tasks.register('decodeMascotScene') {
