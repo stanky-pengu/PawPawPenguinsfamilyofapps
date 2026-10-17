@@ -28,6 +28,7 @@ import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.graphics.Typeface;
 import java.util.Calendar;
 import java.util.Locale;
@@ -74,7 +75,12 @@ public class MainActivity extends Activity {
         loading.setTag("penguin_loading");
         loading.setOnAnimationEndListener(() -> loading.animate().alpha(0f).setDuration(220).withEndAction(() -> screen.removeView(loading)));
         screen.addView(loading, new FrameLayout.LayoutParams(-1, -1));
-        TextView title = text("Your weekly calendar", 27, INK, true); title.setTag("calendar_title"); root.addView(title);
+        LinearLayout titleRow = new LinearLayout(this); titleRow.setGravity(Gravity.CENTER_VERTICAL); root.addView(titleRow);
+        TextView title = text("Your weekly calendar", 27, INK, true); title.setTag("calendar_title");
+        titleRow.addView(title, new LinearLayout.LayoutParams(0, -2, 1));
+        TextView friendSeal = friendMadeStamp();
+        LinearLayout.LayoutParams sealParams = new LinearLayout.LayoutParams(dp(40), dp(36)); sealParams.leftMargin = dp(8);
+        titleRow.addView(friendSeal, sealParams);
         TextView subtitle = text("Tap a time to change it. Turn on only the days you need.", 15, MUTED, false); marginTop(subtitle, 4); root.addView(subtitle);
         batteryView = text("🔋 Battery --%", 14, INK, true); batteryView.setTag("battery_meter"); batteryView.setPadding(dp(12), dp(11), dp(12), dp(11)); batteryView.setBackground(round(0xfff7fcff, 16)); marginTop(batteryView, 14); root.addView(batteryView);
         weekList = new LinearLayout(this); weekList.setOrientation(LinearLayout.VERTICAL); marginTop(weekList, 8); root.addView(weekList); renderDays();
@@ -93,6 +99,14 @@ public class MainActivity extends Activity {
         Button diagnostics = button("Run checks & share test log", 0xff367f9c); diagnostics.setTag("test_log_button"); diagnostics.setOnClickListener(v -> shareTestLog()); marginTop(diagnostics, 12); root.addView(diagnostics);
         Button privacy = button("Privacy Policy", 0xff367f9c); privacy.setTag("privacy_policy"); privacy.setOnClickListener(v -> startActivity(new Intent(this, PrivacyPolicyActivity.class))); marginTop(privacy, 8); root.addView(privacy);
     }
+    private TextView friendMadeStamp() {
+        TextView seal = text("FRIEND\\nMADE", 7, 0xfff5b94c, true);
+        seal.setGravity(Gravity.CENTER); seal.setLineSpacing(0, 0.88f);
+        seal.setContentDescription("Gold FRIEND MADE PawPawPenguins seal"); seal.setTag("friend_made_stamp");
+        GradientDrawable badge = new GradientDrawable(); badge.setShape(GradientDrawable.OVAL); badge.setColor(INK); badge.setStroke(dp(1), 0xfff5b94c);
+        seal.setBackground(badge); return seal;
+    }
+
     private void renderDays() {
         if (weekList == null) return; weekList.removeAllViews();
         for (int day = 1; day <= 7; day++) {
