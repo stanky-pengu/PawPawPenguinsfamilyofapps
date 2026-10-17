@@ -10,8 +10,8 @@ android {
         applicationId 'com.pawpawpenguins.calculator'
         minSdk 23
         targetSdk 35
-        versionCode 4
-        versionName '1.1.2'
+        versionCode 5
+        versionName '1.1.3'
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
 
@@ -26,6 +26,7 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.core:core:1.16.0'
     testImplementation 'junit:junit:4.13.2'
 }
 

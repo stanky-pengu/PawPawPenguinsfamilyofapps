@@ -1,6 +1,6 @@
 # PawPawPenguins Penguin Calculator
 
-Version 1.1.2 is a rebranded rebuild of the earlier Big Calculator. The penguin mascot is joined by a seal buddy on the calculator screen.
+Version 1.1.3 is a rebranded rebuild of the earlier Big Calculator. The penguin mascot is joined by a seal buddy on the calculator screen, and the layout keeps the header and keypad clear of Android system bars.
 
 ## Preserved behavior
 

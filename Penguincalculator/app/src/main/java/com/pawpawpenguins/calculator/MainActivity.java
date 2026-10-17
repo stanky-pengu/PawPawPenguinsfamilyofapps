@@ -12,6 +12,9 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 public final class MainActivity extends Activity {
     private final CalculatorEngine calculator = new CalculatorEngine();
@@ -36,6 +39,17 @@ public final class MainActivity extends Activity {
         root.setOrientation(LinearLayout.VERTICAL);
         root.setPadding(dp(18), dp(12), dp(18), dp(12));
         root.setBackgroundColor(BG);
+        final int baseLeft = dp(18);
+        final int baseTop = dp(12);
+        final int baseRight = dp(18);
+        final int baseBottom = dp(12);
+        ViewCompat.setOnApplyWindowInsetsListener(root, (view, windowInsets) -> {
+            Insets safeInsets = windowInsets.getInsets(
+                    WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+            view.setPadding(baseLeft + safeInsets.left, baseTop + safeInsets.top,
+                    baseRight + safeInsets.right, baseBottom + safeInsets.bottom);
+            return windowInsets;
+        });
 
         TextView brand = new TextView(this);
         brand.setText("🐧  PAWPAWPENGUINS");
@@ -125,6 +139,7 @@ public final class MainActivity extends Activity {
         }
         root.addView(keys, new LinearLayout.LayoutParams(-1, 0, 4.7f));
         setContentView(root);
+        ViewCompat.requestApplyInsets(root);
     }
 
     private Button makeButton(String label) {
